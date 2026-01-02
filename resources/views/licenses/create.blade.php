@@ -24,17 +24,10 @@
                             @enderror
                         </div>
 
-                        <div class="mb-4">
-                            <label for="license_key" class="block text-gray-700 text-sm font-bold mb-2">
-                                Clave de Licencia:
-                            </label>
-                            <input type="text" name="license_key" id="license_key" value="{{ old('license_key') }}"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('license_key') border-red-500 @enderror"
-                                required>
-                            @error('license_key')
-                                <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
-                            @enderror
-                            <p class="text-gray-600 text-xs italic mt-1">Debe ser única para cada licencia.</p>
+                        <div class="mb-4 bg-blue-50 border border-blue-200 rounded p-4">
+                            <p class="text-blue-700 text-sm">
+                                <strong>📝 Nota:</strong> La clave de licencia se generará automáticamente al crear la licencia.
+                            </p>
                         </div>
 
                         <div class="mb-4">

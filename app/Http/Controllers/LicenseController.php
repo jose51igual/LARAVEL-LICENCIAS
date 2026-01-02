@@ -32,16 +32,18 @@ class LicenseController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'license_key' => 'required|unique:licenses',
             'name' => 'required|string|max:255',
             'domain' => 'required|string|max:255',
             'duration' => 'required|integer|min:1',
         ]);
 
-        $expiration_date = Carbon::now()->addMonths($validated['duration']);
+        $expiration_date = Carbon::now()->addMonths((int)$validated['duration']);
+        
+        // Generar clave de licencia única
+        $license_key = $this->generateLicenseKey();
 
         License::create([
-            'license_key' => $validated['license_key'],
+            'license_key' => $license_key,
             'name' => $validated['name'],
             'domain' => $validated['domain'],
             'duration' => $validated['duration'],
@@ -92,5 +94,23 @@ class LicenseController extends Controller
     {
         $license->delete();
         return redirect()->route('licenses.index')->with('success', 'Licencia eliminada exitosamente.');
+    }
+
+    /**
+     * Generate a unique license key
+     */
+    private function generateLicenseKey()
+    {
+        do {
+            // Generar una clave en formato: XXXX-XXXX-XXXX-XXXX-XXXX
+            $key = strtoupper(substr(md5(uniqid(rand(), true)), 0, 20));
+            $formatted_key = substr($key, 0, 4) . '-' . 
+                           substr($key, 4, 4) . '-' . 
+                           substr($key, 8, 4) . '-' . 
+                           substr($key, 12, 4) . '-' . 
+                           substr($key, 16, 4);
+        } while (License::where('license_key', $formatted_key)->exists());
+
+        return $formatted_key;
     }
 }
